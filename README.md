@@ -105,9 +105,13 @@ Automatisering av innkommende e-post til fylkeskommunen. Hovedsaklig automatisk 
         "ARCHIVE_BASE_URL": "url-til-arkiv-api",
         "ARCHIVE_DOCUMENT_CATEGORY_EPOST_INN": "epost-inn-recno",
         "POSTMOTTAK_UPN": "mailbox@domain.no",
+        "POSTMOTTAK_LOG_UPN": "mailbox@domain.no",
         "POSTMOTTAK_MAIL_FOLDER_INBOX_ID": "Inbox folder id",
         "POSTMOTTAK_MAIL_FOLDER_FINISHED_ID": "Finished folder id",
         "POSTMOTTAK_MAIL_FOLDER_MANUALHANDLING_ID": "Manual handling folder id",
+        "POSTMOTTAK_MAIL_FOLDER_ROBOT_LOG_NOMATCH_ID": "No match id",
+        "POSTMOTTAK_MAIL_FOLDER_ROBOT_LOG_MAYBE_ID": "Maybe id",
+        "POSTMOTTAK_MAIL_FOLDER_UNWANTED_RULE_ID": "unwanted rule id",
         "AZURE_OPENAI_API_KEY": "secret key",
         "AZURE_OPENAI_MODEL_NAME": "gpt-4o-mini",
         "AZURE_OPENAI_ENDPOINT": "sweden url",
@@ -117,9 +121,38 @@ Automatisering av innkommende e-post til fylkeskommunen. Hovedsaklig automatisk 
         "EMAILTYPE_RF13.50_TEST_PROJECTNUMBER": "Denne trengs bare i dev og local og skal henvise til et test-prosjekt i testmiljøet",
         "EMAILTYPE_INNSYN_ADDRESSES": "bjarne.betjent@sesamstasjon.no",
         "EMAILTYPE_PENGETRANSPORTEN_FORWARD_ADDRESSES": "o.tidemann@sesamstasjon.no",
-        "EMAILTYPE_LOYVEGARANTI_RESPONSIBLE_ENTERPRISE_RECNO": "81549300"
+        "EMAILTYPE_LOYVEGARANTI_RESPONSIBLE_ENTERPRISE_RECNO": "81549300",
+        "MONGODB_COLLECTION_NAME": "collection-name",
+        "MONGODB_CONNECTION_STRING": "connection-string",
+        "MONGODB_DATABASE_NAME": "database-name",
     }
 }
+```
+
+## AI Provider Configuration
+
+Postmottak-arkivering supports multiple AI providers for processing emails. You can configure which provider to use through environment variables. Choose either 'AzureOpenAI' or 'Mistral'
+
+### Supported Providers
+
+#### Azure OpenAI (Default)
+To use Azure OpenAI, set the following environment variables:
+```bash
+AI_PROVIDER=AzureOpenAI
+AZURE_OPENAI_MODEL_NAME=your-model
+AZURE_OPENAI_API_KEY=your-azure-openai-api-key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_MAX_COMPLETION_TOKENS=10000
+```
+
+#### Mistral AI
+To use Mistral AI, set the following environment variables:
+```bash
+AI_PROVIDER=Mistral
+MISTRAL_MODEL_NAME=your-model
+MISTRAL_API_KEY=your-mistral-api-key
+MISTRAL_BASE_URL=https://api.mistral.ai
+MISTRAL_MAX_COMPLETION_TOKENS=10000
 ```
 
 ### Legge til nye e-posttyper

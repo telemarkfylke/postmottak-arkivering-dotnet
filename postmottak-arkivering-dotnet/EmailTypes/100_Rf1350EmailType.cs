@@ -77,7 +77,6 @@ public partial class Rf1350EmailType : IEmailType
     public async Task<EmailTypeMatchResult> MatchCriteria(Message message)
     {
         await Task.CompletedTask;
-        
         if (string.IsNullOrEmpty(message.From?.EmailAddress?.Address))
         {
             return new EmailTypeMatchResult
@@ -104,7 +103,6 @@ public partial class Rf1350EmailType : IEmailType
                 Result = $"E-postens emne inneholder ikke et gyldig søkeord for {Title.ToLower()}. Gyldige søkeord er: {string.Join(", ", _subjects)}"
             };
         }
-        
         var (_, result) = await _aiArntIvanService.Ask<Rf1350ChatResult>(message.Body!.Content!);
         if (string.IsNullOrEmpty(result?.Type) || string.IsNullOrEmpty(result.ReferenceNumber))
         {
@@ -118,13 +116,11 @@ public partial class Rf1350EmailType : IEmailType
         }
 
         _result = result;
-        
         if (!string.IsNullOrEmpty(_testProjectNumber) && !string.IsNullOrEmpty(_result.ProjectNumber))
         {
             _logger.LogWarning("Test project number {_testProjectNumber} is set. Project number found by Arnt Ivan will be overridden for test purposes", _testProjectNumber);
             _result.ProjectNumber = _testProjectNumber;
         }
-        
         _metricsService.Count($"{Constants.MetricsPrefix}_EmailType_Match", "EmailType hit a maybe match", ("EmailType", nameof(Rf1350EmailType)));
         return new EmailTypeMatchResult
         {
@@ -167,8 +163,13 @@ public partial class Rf1350EmailType : IEmailType
     }
     
     private async Task<string> HandleOverforingAvMottattSoknad(FlowStatus flowStatus)
-    {
-        if (!string.IsNullOrEmpty(_result!.ProjectNumber) && !RegexProjectNumber().IsMatch(_result.ProjectNumber))
+    {   
+        if(string.IsNullOrEmpty(_result!.ProjectNumber))
+        {
+            flowStatus.SendToArkivarerForHandling = true;
+            throw new InvalidOperationException($"Project number {_result.ProjectNumber} is empty or null");
+        }
+        if (!RegexProjectNumber().IsMatch(_result.ProjectNumber))
         {
             flowStatus.SendToArkivarerForHandling = true;
             throw new InvalidOperationException($"Project number {_result.ProjectNumber} is not valid");

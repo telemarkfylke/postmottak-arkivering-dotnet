@@ -127,10 +127,14 @@ public class GraphService : IGraphService
     public async Task<List<MailFolder>> GetMailFolders(string userPrincipalName)
     {
         var mailFolders = await _graphClient.Users[userPrincipalName].MailFolders.GetAsync(
-            configuration => configuration.Headers.Add(ImmutableIdHeader, ImmutableIdHeaderValue));
+            configuration => 
+            {
+                configuration.Headers.Add(ImmutableIdHeader, ImmutableIdHeaderValue);
+                configuration.QueryParameters.Top = 20;
+            });
         if (mailFolders?.Value is null)
         {
-            return [];
+            return new List<MailFolder>();
         }
 
         return mailFolders.Value;
@@ -143,7 +147,7 @@ public class GraphService : IGraphService
             configuration => configuration.Headers.Add(ImmutableIdHeader, ImmutableIdHeaderValue));
         if (childFolders?.Value is null)
         {
-            return [];
+            return new List<MailFolder>();
         }
 
         return childFolders.Value;
@@ -167,7 +171,7 @@ public class GraphService : IGraphService
             configuration => configuration.Headers.Add(ImmutableIdHeader, ImmutableIdHeaderValue));
         if (attachments?.Value is null)
         {
-            return [];
+            return new List<Attachment>();
         }
 
         return attachments.Value;
@@ -182,7 +186,7 @@ public class GraphService : IGraphService
         var mailMessages = await _graphClient.Users[userPrincipalName].MailFolders[folderId].Messages.GetAsync(Options);
         if (mailMessages?.Value is null)
         {
-            return [];
+            return new List<Message>();
         }
 
         _logger.LogInformation("Retrieved {Count} mail messages from {UserPrincipalName} in folder {FolderId} with filter {Filter}", mailMessages.Value.Count, userPrincipalName, folderId, filter);
@@ -193,7 +197,7 @@ public class GraphService : IGraphService
             config.Headers.Add(ImmutableIdHeader, ImmutableIdHeaderValue);
             config.QueryParameters.Expand = expandedProperties;
             config.QueryParameters.Filter = filter;
-            config.QueryParameters.Orderby = [orderBy ?? "receivedDateTime asc"];
+            config.QueryParameters.Orderby = new[] { orderBy ?? "receivedDateTime asc" };
             config.QueryParameters.Top = top;
         }
     }

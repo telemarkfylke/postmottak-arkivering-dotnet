@@ -155,6 +155,19 @@ public class LoyvegarantiEmailType : IEmailType
         {
             throw new InvalidOperationException("Result is null. Somethings wrong");
         }
+
+        if (flowStatus.Archive.SyncEnterprise is null)
+        {
+            try
+            {
+                flowStatus.Archive.SyncEnterprise = (await _archiveService.SyncEnterprise(_result.OrganizationNumber.ToString()))["enterprise"];
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("404"))
+            {
+                flowStatus.SendToArkivarerForHandling = true;
+                throw;
+            }
+        }
         
         if (string.IsNullOrEmpty(flowStatus.Archive.CaseNumber))
         {
@@ -217,7 +230,7 @@ public class LoyvegarantiEmailType : IEmailType
                     CaseType = "Sak",
                     ResponsibleEnterpriseRecno = _responsibleEnterpriseRecno,
                     Status = "B",
-                    SubArchive = "Løyver",
+                    SubArchive = "Løyve",
                     Title = caseTitle
                 });
                 

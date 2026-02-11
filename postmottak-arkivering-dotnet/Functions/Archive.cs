@@ -256,8 +256,8 @@ public class Archive
             return new ArchiveOkResponse();
         }
 
-        List<(IEmailType, FlowStatus)> messagesToHandle = [];
-        List<UnknownMessage> unknownMessages = [];
+        List<(IEmailType, FlowStatus)> messagesToHandle = new();
+        List<UnknownMessage> unknownMessages = new();
 
         foreach (var message in mailMessages)
         {

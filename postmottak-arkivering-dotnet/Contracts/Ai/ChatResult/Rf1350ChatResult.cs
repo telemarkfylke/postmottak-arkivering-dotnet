@@ -16,7 +16,7 @@ public class Rf1350ChatResult
     [Description("Er på formatet: 00-0000")]
     public string ProjectNumber { get; set; } = string.Empty;
     
-    [Description("Er på formatet: 0000-0000")]
+    [Description("Er 8 siffer på formatet: 0000-0000 og verdien ligger etter \"Referansenummer:\", og er det samme som ligger i \"Søknadsnummer:\" dersom dette finnes")]
     public string ReferenceNumber { get; init; } = string.Empty;
     
     [Description("Skal alltid være en av følgende typer og du må selv finne ut hvilken som stemmer ut fra input:\n- 'Anmodning om utbetaling'\n- 'Automatisk kvittering på innsendt søknad'\n- 'Overføring av mottatt søknad'")]
